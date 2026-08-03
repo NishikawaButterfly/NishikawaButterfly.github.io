@@ -230,6 +230,17 @@ main {
   color: var(--muted);
 }
 
+.role {
+  color: var(--muted);
+  font-size: 1.15rem;
+  margin-top: -0.75rem;
+}
+
+.identity {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 /* Cards */
 
 .card {
