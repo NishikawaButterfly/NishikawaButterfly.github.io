@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About — NishikawaButterfly</title>
+    <meta name="description" content="An electrical engineer working around data centers and energy, building software that takes the tedious and error-prone parts out of real engineering workflows.">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/main.js" defer></script>
+  </head>
+  <body>
+    <!-- shell:header -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="wrap bar">
+        <a class="site-name" href="/">NishikawaButterfly</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+        <nav id="site-nav" class="site-nav" aria-label="Site">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects.html">Projects</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- /shell:header -->
+
+    <main id="main" class="wrap">
+      <h1>About</h1>
+      <p>I'm an electrical engineer. My working world is data centers and energy: capacity and redundancy, asset registers moving between teams, dispatch and financing questions, the operational discipline that keeps critical facilities running. The software on this site exists because parts of that world are tedious and error-prone in exactly the ways software is good at — checking a register field by field, redoing capacity arithmetic without slipping a unit, walking a financial scenario through every convention the same way twice. Each project started as a real irritation, not as a portfolio piece.</p>
+
+      <h2 id="how-things-are-built">How things are built here</h2>
+      <p>A few habits run through every repository, and they come from engineering practice rather than software fashion:</p>
+      <ul>
+        <li><strong>Tests are first-class.</strong> Behaviour worth having is behaviour worth pinning. Reference results are committed separately from the engines that produce them, and CI reconciles the two.</li>
+        <li><strong>Conventions are written down.</strong> Where a calculation admits more than one defensible convention — day counts, rebalancing, rounding — the chosen one is documented, so a result can be checked rather than debated.</li>
+        <li><strong>The math is hand-verified.</strong> Reference fixtures use numbers deliberately chosen so a reviewer can recompute them on paper, and the paper calculation is the acceptance oracle.</li>
+        <li><strong>Limitations are published.</strong> Every project states what it does not do and where it stops being dependable, because a tool's edges are part of its specification.</li>
+        <li><strong>All data is fictional.</strong> Every snapshot, register, price series, and scenario across these projects was invented for the repository it lives in. Nothing here derives from any real site, client, or dataset.</li>
+      </ul>
+      <p>The <a href="/case-studies.html">case studies</a> show these habits in action on specific incidents and decisions, each linked to the code that backs it.</p>
+
+      <h2 id="pseudonymity">On the name</h2>
+      <p>This account is intentionally pseudonymous. The repositories, their tests, and their documentation are the argument, and I would rather they speak for themselves than lean on a CV.</p>
+    </main>
+
+    <!-- shell:footer -->
+    <footer class="site-footer">
+      <div class="wrap">
+        <p><a href="https://github.com/NishikawaButterfly">github.com/NishikawaButterfly</a> · <a href="mailto:nishikawa.butterfly@gmail.com">nishikawa.butterfly@gmail.com</a></p>
+        <p>All sample data across these projects is fictional.</p>
+      </div>
+    </footer>
+    <!-- /shell:footer -->
+  </body>
+</html>
