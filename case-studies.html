@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Case Studies — NishikawaButterfly</title>
+    <meta name="description" content="Four engineering stories from these repositories — a Windows-only media-type failure, hand arithmetic as a test oracle, a look-ahead-proof backtest, and a benchmark that would not fit — each verifiable in the linked code.">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/main.js" defer></script>
+  </head>
+  <body>
+    <!-- shell:header -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="wrap bar">
+        <a class="site-name" href="/">NishikawaButterfly</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+        <nav id="site-nav" class="site-nav" aria-label="Site">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects.html">Projects</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- /shell:header -->
+
+    <main id="main" class="wrap">
+      <h1>Case studies</h1>
+      <p class="lede">Four short engineering stories from these repositories. None of them is hypothetical: every one happened while building the projects on this site, and every claim below links to the code, test, or document that backs it up, so you can check the story against the source rather than take my word for it.</p>
+
+      <ul>
+        <li><a href="#windows-media-types">The demo that worked everywhere except Windows</a> — a deployment failure no amount of reading code would have found</li>
+        <li><a href="#hand-arithmetic">Hand arithmetic as an acceptance oracle</a> — why dc-twin's reference numbers are recomputable on paper</li>
+        <li><a href="#look-ahead">Making look-ahead impossible, not forbidden</a> — a backtest interface that cannot express the classic mistake</li>
+        <li><a href="#year-does-not-fit">When the year doesn't fit</a> — publishing a benchmark's failure instead of hiding it</li>
+      </ul>
+
+      <article class="project">
+        <h2 id="windows-media-types">The demo that worked everywhere except Windows</h2>
+        <p><a href="https://github.com/NishikawaButterfly/dc-twin">dc-twin</a> ships a small browser explorer next to its API: plain JavaScript, one stylesheet, served by the same FastAPI process that runs the simulator. It worked on Linux CI, it worked in the Docker image, and the test suite was green. Then I started the server on a Windows machine to take a screenshot for the README, opened the page, and got the header and nothing else. No error dialog, no broken layout — a page that simply never came to life.</p>
+        <p>The browser console had the real story: it had refused to execute <code>/app.js</code> because the file arrived as <code>text/plain</code>. Python's <code>mimetypes</code> module builds its type table per platform, and on Windows it reads the registry; on that machine something had registered <code>.js</code> as <code>text/plain</code>, and the static-file handler passes along whatever <code>mimetypes</code> guesses. On its own a wrong type would still have run, because browsers historically sniff content. But every dc-twin response carries <code>X-Content-Type-Options: nosniff</code> — a header I had added deliberately so responses are interpreted exactly as declared. A correct security header plus a wrong declaration meant the browser did precisely what it was told: it treated the application's own script as plain text and discarded it, silently.</p>
+        <p>The fix is three lines <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/src/dc_twin/api.py">next to the static mount in <code>api.py</code></a>, pinning the media types the web assets actually use — <code>text/javascript</code>, <code>text/css</code>, <code>image/svg+xml</code> — with a comment explaining why they are there. Because a fix that lives only in one machine's memory is worth little, <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/tests/test_api.py">a regression test in <code>test_api.py</code></a> now requests <code>/app.js</code> and <code>/styles.css</code> and asserts the served content types, so the combination can never quietly come back.</p>
+        <p>What stays with me is that every layer behaved correctly. The registry is allowed to define local types, <code>mimetypes</code> documents that it reads it, and <code>nosniff</code> did exactly its job. The failure lived in the deployment environment, not in any line of code, which is why reading the code could never have found it. The lesson: verify the deployed thing, not the code. The screenshot session was doing exactly that — by accident.</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/src/dc_twin/api.py">The fix</a> · <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/tests/test_api.py">The regression test</a> · <a href="https://dc-twin.fly.dev/">The explorer, running</a></p>
+      </article>
+
+      <article class="project">
+        <h2 id="hand-arithmetic">Hand arithmetic as an acceptance oracle</h2>
+        <p>A simulator has an awkward property: its output looks equally plausible whether or not it is right. Tests that compare the engine against values the engine itself produced only prove consistency, not correctness. For <a href="https://github.com/NishikawaButterfly/dc-twin">dc-twin</a> I wanted an oracle that owed nothing to the implementation, so the reference fixtures were designed backwards: choose numbers round enough that a reviewer can redo the entire calculation on paper.</p>
+        <p>Take the N topology — a single 1&nbsp;MW path with no redundancy and a UPS holding 50&nbsp;kWh of usable energy, which is 180,000,000,000&nbsp;mJ. In its reference scenario the utility fails at 120,000&nbsp;ms of a 600,000&nbsp;ms horizon. Discharging at 1&nbsp;MW, the UPS lasts 180,000,000,000&nbsp;mJ&nbsp;÷&nbsp;1,000,000&nbsp;W&nbsp;=&nbsp;180,000&nbsp;ms, so it reaches zero at 300,000&nbsp;ms. The utility returns at 420,000&nbsp;ms, giving one interruption of 120,000&nbsp;ms and 120,000,000,000&nbsp;mJ unserved out of 600,000,000,000&nbsp;mJ demanded. The service ratio is 480&nbsp;÷&nbsp;600&nbsp;=&nbsp;0.8: exactly 800,000&nbsp;ppm, no rounding involved. Every division in that chain comes out even because the inputs were chosen so it would.</p>
+        <p>The arithmetic is written out in full in <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/docs/REFERENCE_TOPOLOGIES.md">the reference topologies document</a> and <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/docs/REFERENCE_SCENARIO.md">the 2N reference scenario</a>. The expected values are committed as <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/examples/synthetic/expected/reference-metrics.json">a JSON fixture</a> that lives deliberately apart from the engine, and on every push <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/scripts/check_reference_results.py">a reconciliation script</a> replays each scenario in CI and requires the normative integers to match exactly. If the engine ever drifts from the paper answer, the build fails, and the paper answer wins the argument until someone can show where the paper is wrong.</p>
+        <p>This is an old instinct from electrical work, where you sanity-check a tool against a hand calculation before trusting it with anything that matters. The lesson: when the answer is checkable by hand, make the hand answer the test — not a value the code once produced and somebody blessed.</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/docs/REFERENCE_TOPOLOGIES.md">The hand calculations</a> · <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/examples/synthetic/expected/reference-metrics.json">The committed expectations</a> · <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/scripts/check_reference_results.py">The CI reconciliation</a></p>
+      </article>
+
+      <article class="project">
+        <h2 id="look-ahead">Making look-ahead impossible, not forbidden</h2>
+        <p>The classic way a backtest lies is look-ahead: a strategy that, somewhere in its code path, touches data from after the decision it is simulating. The usual defence is discipline — a convention that policies only read the past, enforced by review. The <a href="https://github.com/NishikawaButterfly/quant-risk-engine">quant risk engine</a> takes a different position: a rule someone must remember is weaker than a rule that cannot be broken, so the interface makes the mistake inexpressible.</p>
+        <p>At every scheduled rebalance the engine hands the policy a <a href="https://github.com/NishikawaButterfly/quant-risk-engine/blob/main/src/quantrisk/backtest.py"><code>PolicyWindow</code></a> built by slicing the aligned series at the decision date. The object physically contains the dates and prices strictly before that date and nothing else; its constructor rejects any history that touches its own decision date. There is no flag to pass and no method to call that reaches later data, because the later data is not in the object. The tests assert, for every rebalance of a real run, that the window ends exactly one trading day before the decision.</p>
+        <p>A guarantee like that deserves evidence that it guards something real, so <a href="https://github.com/NishikawaButterfly/quant-risk-engine/blob/main/tests/test_backtest.py">the test suite</a> includes a deliberately cheating policy that is handed the full price series on the side, outside the interface. The fixture is mean-reverting by construction — the trailing winner is always the forward loser — which makes honest momentum the worst possible policy and a peeking one the best. Starting from 1000, honest momentum finishes near 810 while the cheat finishes near 1210, and the test pins both values. A companion test then shows that the cheat's first move — locating the decision date in its data — raises an exception when attempted through the window: the date is absent from the index, and the positions at or after it are out of range.</p>
+        <p>So the property holds three ways at once: the window cannot contain the future, the tests verify it never does, and the cheating policy documents exactly how much a violation would be worth. The lesson: design so the mistake cannot be written, then keep one working demonstration of why that mattered.</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/quant-risk-engine/blob/main/src/quantrisk/backtest.py">The window</a> · <a href="https://github.com/NishikawaButterfly/quant-risk-engine/blob/main/tests/test_backtest.py">The cheating policy</a> · <a href="https://github.com/NishikawaButterfly/quant-risk-engine/blob/main/docs/methodology.md">The methodology notes</a></p>
+      </article>
+
+      <article class="project">
+        <h2 id="year-does-not-fit">When the year doesn't fit</h2>
+        <p>The roadmap for <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid">the PV-BESS dispatch model</a> asked for a benchmark of a complete 8,760-hour scenario — a full year at hourly resolution — publishing the hardware, runtime, solver gap, and input hash. Measuring it produced a table that behaves until it doesn't: a day solves in 0.04&nbsp;s, a month in 0.58&nbsp;s, a quarter in 2.75&nbsp;s, a half year in 22.5&nbsp;s. The full year completed once, in 191&nbsp;s.</p>
+        <p>Then I ran the identical problem again, and the second phase of the solve — a refinement pass that re-optimizes throughput at the optimal profit — found no feasible incumbent within a 1,200-second per-phase limit and was aborted. An earlier draft of the price series had already shown the same behaviour, giving no incumbent within 280&nbsp;s. The pattern was consistent: the economic phase scales roughly linearly and took 13.7&nbsp;s at a year, but the refinement phase dominates beyond roughly 2,000 intervals, grows super-linearly, and its runtime swings unpredictably with the exact price series and solver environment. The honest summary of the full-year row is that the same inputs may take three minutes or may not finish.</p>
+        <p>That left a choice about what to commit. A full-year sample that fails its own documented run would be worse than none, so the committed large fixture is <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/tree/main/sample-data/monthly">the 744-hour month</a>, which solves in about a second, and <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/blob/main/docs/benchmarks.md">the benchmarks page</a> publishes the full-year measurements anyway — including the aborted rerun — together with the environment, the input hashes, and <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/blob/main/tools/make_synthetic_year.py">the script</a> that regenerates the exact year so anyone can repeat the attempt. The page states plainly that the reproduction command may or may not finish, and that this is precisely the published finding. The practical horizon on modest hardware is about a quarter; a rolling-horizon decomposition that would bound the refinement is recorded as future work, not claimed.</p>
+        <p>The lesson: when a stated goal meets a measured limit, publish the limit. A benchmark page that only shows the runs that finished isn't a benchmark — it's advertising.</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/blob/main/docs/benchmarks.md">The benchmark page</a> · <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/tree/main/sample-data/monthly">The committed fixture</a> · <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/blob/main/tools/make_synthetic_year.py">The year generator</a></p>
+      </article>
+    </main>
+
+    <!-- shell:footer -->
+    <footer class="site-footer">
+      <div class="wrap">
+        <p><a href="https://github.com/NishikawaButterfly">github.com/NishikawaButterfly</a> · <a href="mailto:nishikawa.butterfly@gmail.com">nishikawa.butterfly@gmail.com</a></p>
+        <p>All sample data across these projects is fictional.</p>
+      </div>
+    </footer>
+    <!-- /shell:footer -->
+  </body>
+</html>
