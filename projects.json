@@ -44,7 +44,7 @@
       "status": "Released",
       "version": "v0.1.0",
       "description": "An operations and commissioning platform for critical facilities behind a token-authenticated, role-guarded REST API.",
-      "result": "Mutual-exclusion constraints stop simultaneous maintenance on redundant equipment: the second order is rejected with a 409 naming the constraint and the conflicting order.",
+      "result": "Mutual-exclusion constraints stop simultaneous maintenance on redundant equipment — the second order is rejected with a 409 naming the constraint and the conflicting order.",
       "limitation": "API-token authentication only, with no frontend yet, and roles apply to the whole installation rather than per site.",
       "tech": ["Python", "FastAPI", "SQLAlchemy", "bearer-token auth with roles"],
       "links": {
