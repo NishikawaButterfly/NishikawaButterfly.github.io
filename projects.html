@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Projects — NishikawaButterfly</title>
+    <meta name="description" content="All seven public projects: simulators, validators, and financial models for data-center and energy engineering, each with a tagged release and fictional sample data.">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/main.js" defer></script>
+  </head>
+  <body>
+    <!-- shell:header -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="wrap bar">
+        <a class="site-name" href="/">NishikawaButterfly</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+        <nav id="site-nav" class="site-nav" aria-label="Site">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects.html">Projects</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- /shell:header -->
+
+    <main id="main" class="wrap">
+      <h1>Projects</h1>
+      <p class="lede">Seven public projects, each with a tagged release, tests, and invented sample data. Ordered roughly by how much there is to look at.</p>
+
+      <article class="project">
+        <h2 id="dc-twin">dc-twin</h2>
+        <p>A deterministic, capacity-constrained simulator for synthetic data-center electrical architectures. You give it a versioned design snapshot and a scenario of failures, maintenance windows, and transfers; it returns a timeline of which loads stayed served, which paths carried the power, when each UPS ran down, and what caused every alarm. The same inputs and model version always reproduce the same SHA-256 result hash, so any run can be replayed and verified, and the reference scenario's numbers are hand-calculated with the expected values committed independently of the engine.</p>
+        <p class="tech">Python · FastAPI (read-only API) · plain JavaScript explorer · PostgreSQL · Docker Compose</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/dc-twin">Repository</a> · <a href="https://github.com/NishikawaButterfly/dc-twin/releases/tag/v0.2.0">v0.2.0 release with demo video</a> · <a href="https://dc-twin.fly.dev/">Live explorer</a></p>
+      </article>
+
+      <article class="project">
+        <h2 id="electrical-asset-validator">Electrical Asset Validator</h2>
+        <p>A self-hosted web app for checking electrical asset registers before they move between design, commissioning, and operations teams. Upload a CSV or XLSX file and it validates a documented nine-column contract — duplicate tags, missing panel and circuit references, out-of-range voltage and power — with every finding tied to its row and field. It also diffs two revisions of the same register by stable asset tag, and results download as PDF or XLSX reports.</p>
+        <p class="tech">FastAPI · React + TypeScript · PostgreSQL · Docker Compose</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/electrical-asset-validator">Repository</a> · <a href="https://github.com/NishikawaButterfly/electrical-asset-validator/releases/download/v0.1.0/validator-demo.mp4">Demo video (v0.1.0)</a> · <a href="https://electrical-asset-validator.fly.dev/">Live demo</a></p>
+      </article>
+
+      <article class="project">
+        <h2 id="quant-risk-engine">Quant Risk Engine</h2>
+        <p>A reproducible portfolio-analytics and market-risk engine for public securities, and deliberately not a prediction tool. Validated price series, the standard risk metrics with every convention documented, risk contributions that sum to one, an efficient frontier checked against its closed form, walk-forward backtesting where look-ahead is impossible by construction, seeded Monte Carlo, and stress windows and shocks. The CLI writes a committee-style report that is byte-identical across runs, and every worked example in the docs is hand-calculated and pinned by tests.</p>
+        <p class="tech">Python · NumPy and SciPy as the only runtime dependencies · CLI</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/quant-risk-engine">Repository</a> · <a href="https://github.com/NishikawaButterfly/quant-risk-engine/releases">Releases</a></p>
+      </article>
+
+      <article class="project">
+        <h2 id="energy-investment-lab">Energy Investment Lab</h2>
+        <p>A cash-flow and financing model for energy assets, in plain Python with no runtime dependencies. It handles escalated revenues and costs, annuity debt with DSCR, corporate tax with depreciation and loss carryforward, MIRR, levelized cost, one-at-a-time sensitivities, and a seeded Monte Carlo whose results are reproducible to the byte. One scenario file in; a results file and a committee-style report out, with every worked example in the docs hand-calculated and pinned by tests.</p>
+        <p class="tech">Plain Python, zero runtime dependencies · CLI</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/energy-investment-lab">Repository</a> · <a href="https://github.com/NishikawaButterfly/energy-investment-lab/releases">Releases</a></p>
+      </article>
+
+      <article class="project">
+        <h2 id="critical-facilities-manager">Critical Facilities Manager</h2>
+        <p>An operations and commissioning platform for critical facilities, developed and tested privately and now public. Locations, assets, and maintenance orders with validated state machines; MOP/SOP/EOP procedures with four-eyes approval; work permits that block completing an order while one is still open; commissioning tests with witnessed evidence; and an append-only audit trail behind every write. Mutual-exclusion constraints stop simultaneous maintenance on redundant equipment: starting the second order is rejected with a 409 that names the constraint and the conflicting order.</p>
+        <p class="tech">Python · FastAPI · SQLAlchemy · bearer-token auth with roles · 237 tests</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/critical-facilities-manager">Repository</a> · <a href="https://github.com/NishikawaButterfly/critical-facilities-manager/releases">Releases</a></p>
+      </article>
+
+      <article class="project">
+        <h2 id="pv-bess-hybrid">PV-BESS dispatch model</h2>
+        <p>A Python model for dispatch of solar-plus-battery plants. It reads hourly PV production and market prices, computes a battery dispatch schedule as a mixed-integer program solved with HiGHS, and works out NPV, IRR, payback, and LCOS for the scenario. Rebuilt from an older prototype after an audit found calculation errors in the original, so it is deliberately small and heavily tested, with solver benchmarks published in the docs.</p>
+        <p class="tech">Python · SciPy MILP (HiGHS) · optional FastAPI API · dependency-free results page</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/pv-bess-hybrid">Repository</a> · <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/releases/download/v0.1.0/pvbess-demo.mp4">Demo video (v0.1.0)</a> · <a href="https://pv-bess-hybrid.fly.dev/">Live explorer</a></p>
+      </article>
+
+      <article class="project">
+        <h2 id="sudoku-pwa">Sudoku Instant</h2>
+        <p>A sudoku game as an installable progressive web app. Six difficulty levels, 24 puzzles each checked to have exactly one solution, candidate notes, hints, undo, full keyboard play, offline support, and locally saved progress. The first version was a single HTML file; some messaging apps opened it in a restricted preview where the JavaScript couldn't run, so it became a proper PWA.</p>
+        <p class="tech">Plain JavaScript, no framework · service worker · Playwright tests</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/sudoku-pwa">Repository</a> · <a href="https://github.com/NishikawaButterfly/sudoku-pwa/releases">Releases</a> · <a href="https://nishikawabutterfly.github.io/sudoku-pwa/">Play it</a></p>
+      </article>
+    </main>
+
+    <!-- shell:footer -->
+    <footer class="site-footer">
+      <div class="wrap">
+        <p><a href="https://github.com/NishikawaButterfly">github.com/NishikawaButterfly</a> · <a href="mailto:nishikawa.butterfly@gmail.com">nishikawa.butterfly@gmail.com</a></p>
+        <p>All sample data across these projects is fictional.</p>
+      </div>
+    </footer>
+    <!-- /shell:footer -->
+  </body>
+</html>

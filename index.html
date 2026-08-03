@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NishikawaButterfly — tools for data centers and energy work</title>
+    <meta name="description" content="Projects by NishikawaButterfly: simulators, validators, and financial models for data-center and energy engineering work.">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/main.js" defer></script>
+  </head>
+  <body>
+    <!-- shell:header -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="wrap bar">
+        <a class="site-name" href="/">NishikawaButterfly</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+        <nav id="site-nav" class="site-nav" aria-label="Site">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects.html">Projects</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- /shell:header -->
+
+    <main id="main" class="wrap">
+      <h1>Tools for data centers and energy work</h1>
+      <p>I'm an electrical engineer. Most of my day job is around data centers and energy projects, and I write software to take the tedious parts out of that work. Everything public here has a tagged release, and all of the sample data is made up.</p>
+      <p class="lede">Seven projects live on <a href="https://github.com/NishikawaButterfly">GitHub</a>; three of them run as live demos you can open right now. These are the ones I'd show first.</p>
+
+      <section aria-labelledby="highlights">
+        <h2 id="highlights">Three places to start</h2>
+
+        <article class="card">
+          <h3>dc-twin</h3>
+          <p>A deterministic capacity simulator for data-center electrical architectures. Describe a topology and a scenario of failures and maintenance windows; it returns a timeline of which loads stayed served, when each UPS ran down, and what caused every alarm.</p>
+          <p class="hook">The interesting bit: the reference scenario's numbers are checked against a hand calculation, and the expected values are committed separately from the engine, so the tests notice if the code ever drifts from the math.</p>
+          <p class="links"><a href="https://dc-twin.fly.dev/">Live explorer</a> · <a href="https://github.com/NishikawaButterfly/dc-twin">Repository</a></p>
+        </article>
+
+        <article class="card">
+          <h3>Electrical Asset Validator</h3>
+          <p>A web app that checks CSV and XLSX electrical asset registers before they get handed between teams, and diffs two revisions of the same register by asset tag. Every finding names the row and field it refers to, and results export to PDF or XLSX.</p>
+          <p class="hook">The interesting bit: both file formats go through exactly the same rules, so the same register produces the same findings either way — and the diff reports a renamed tag as a removal plus an addition instead of guessing.</p>
+          <p class="links"><a href="https://electrical-asset-validator.fly.dev/">Live demo</a> · <a href="https://github.com/NishikawaButterfly/electrical-asset-validator">Repository</a></p>
+        </article>
+
+        <article class="card">
+          <h3>Quant Risk Engine</h3>
+          <p>A portfolio-analytics and market-risk engine that measures what a supplied price history did, under conventions that are all written down. Deliberately not a prediction tool.</p>
+          <p class="hook">The interesting bit: backtest policies receive a data window that physically contains no later data, so looking ahead is impossible by construction rather than forbidden by discipline.</p>
+          <p class="links"><a href="https://github.com/NishikawaButterfly/quant-risk-engine">Repository</a></p>
+        </article>
+      </section>
+
+      <p><a href="/projects.html">All seven projects</a></p>
+    </main>
+
+    <!-- shell:footer -->
+    <footer class="site-footer">
+      <div class="wrap">
+        <p><a href="https://github.com/NishikawaButterfly">github.com/NishikawaButterfly</a> · <a href="mailto:nishikawa.butterfly@gmail.com">nishikawa.butterfly@gmail.com</a></p>
+        <p>All sample data across these projects is fictional.</p>
+      </div>
+    </footer>
+    <!-- /shell:footer -->
+  </body>
+</html>
