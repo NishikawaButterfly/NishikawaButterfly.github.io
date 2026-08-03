@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Software — NishikawaButterfly</title>
+    <meta name="description" content="How this account builds software: hand-calculated expectations, written-down conventions, determinism, tests that prove design claims, published limitations, fictional data, and plain writing — each with linked examples.">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/main.js" defer></script>
+  </head>
+  <body>
+    <!-- shell:header -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="wrap bar">
+        <a class="site-name" href="/">NishikawaButterfly</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+        <nav id="site-nav" class="site-nav" aria-label="Site">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects.html">Projects</a></li>
+            <li><a href="/case-studies.html">Case Studies</a></li>
+            <li><a href="/about.html">About</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- /shell:header -->
+
+    <main id="main" class="wrap">
+      <h1>How this account builds software</h1>
+      <p class="lede">The projects here differ in domain, but they are built the same way, and the way is the point. These are the practices, each with the code that demonstrates it — not aspirations, but things you can go and check.</p>
+
+      <h2 id="hand-calculated">The expected answer exists before the code does</h2>
+      <p>Where a result can be computed by hand, the hand computation is the acceptance oracle, and it is committed separately from the engine so the two can disagree. dc-twin's reference numbers are worked out on paper in <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/docs/REFERENCE_SCENARIO.md">the reference scenario document</a>, committed as <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/examples/synthetic/expected/reference-metrics.json">a fixture that lives deliberately apart from the engine</a>, and reconciled in CI by <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/scripts/check_reference_results.py">a script</a> that replays every scenario and requires exact matches. If the engine drifts from the paper answer, the build fails, and the paper wins the argument until someone shows where the paper is wrong. The quant risk engine and the investment lab do the same at smaller grain: every worked example in their methodology documents is hand-calculated and asserted by tests, digit for digit.</p>
+
+      <h2 id="conventions">Conventions are documented, not assumed</h2>
+      <p>Most quantitative disagreements are not bugs; they are two people using different defensible conventions. So every convention gets written down where a reviewer will find it: the 252-day annualization, the n&nbsp;−&nbsp;1 volatility denominator, and the sign of a VaR in <a href="https://github.com/NishikawaButterfly/quant-risk-engine/blob/main/docs/methodology.md">the risk engine's methodology</a>; the <a href="https://github.com/NishikawaButterfly/electrical-asset-validator/blob/main/docs/rules.md">nine-column contract</a> the validator enforces; the <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/blob/main/docs/data-contract.md">data contract</a> that makes the dispatch model reject a timestamp without an explicit UTC offset. A documented convention turns "your number is wrong" into "your number used a different rule", which is a conversation that ends.</p>
+
+      <h2 id="determinism">Determinism is a feature, not an accident</h2>
+      <p>Same inputs, same output, always — because a result that cannot be reproduced cannot be reviewed. dc-twin commits to a SHA-256 result hash per run and ships a replay command that verifies it. The risk engine's reports embed no timestamp anywhere, so the same spec produces byte-identical artifacts, <a href="https://github.com/NishikawaButterfly/quant-risk-engine">and a test asserts exactly that</a>. Monte Carlo layers in both financial projects require the seed as an argument rather than defaulting to entropy. Even the synthetic fixtures are deterministic: generator scripts are committed, and test suites fail if the committed data and the generator ever disagree.</p>
+
+      <h2 id="tests-prove-claims">Tests prove design claims, not just code paths</h2>
+      <p>Coverage tells you the code ran; the more interesting tests demonstrate that a design promise holds. The risk engine claims look-ahead is impossible in its backtests, so <a href="https://github.com/NishikawaButterfly/quant-risk-engine/blob/main/tests/test_backtest.py">its test suite includes a deliberately cheating policy</a>, fed the full price series outside the interface, that measurably beats every honest policy — and a companion test shows the cheat's first move fails when attempted through the interface. The facilities manager claims redundant equipment cannot be maintained simultaneously, so a test starts the second order and asserts the refusal names the constraint and the conflicting order. The validator claims CSV and XLSX are treated identically, so the same register goes through both parsers and must yield the same findings. The sudoku app claims each puzzle has exactly one solution, and a bounded solver in the test suite proves all 24. A claim without a test is a hope.</p>
+
+      <h2 id="limitations">Limitations are content, not fine print</h2>
+      <p>Every repository states what the tool does not do, at the same level of prominence as what it does: dc-twin lists the physics it deliberately omits, the validator says it checks data quality and not electrical correctness, the dispatch model's <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/blob/main/docs/limitations.md">limitations page</a> is a first-class document. And when a stated goal met a measured limit — a full-year benchmark that completed once and then failed to finish on a rerun — <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/blob/main/docs/benchmarks.md">the benchmark page publishes the failure</a> with the environment and hashes needed to repeat it. A tool's edges are part of its specification.</p>
+
+      <h2 id="fictional-data">All data is fictional, always</h2>
+      <p>Every topology, register, price series, campus, and scenario in these repositories was invented for the repository it lives in, and several projects document the rule explicitly — dc-twin in <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/docs/DATA_PROVENANCE.md">a data-provenance document</a> where every sample declares itself synthetic. This is partly professional hygiene, since real registers and topologies describe real infrastructure, and partly what makes the rest possible: the reasoning can be fully public precisely because no real site is in it.</p>
+
+      <h2 id="plain-writing">Written to be read</h2>
+      <p>Documentation is written in plain language and aimed at a reader, not at completeness. dc-twin carries a <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/docs/EXPLAINER.md">plain-language explainer</a> that assumes no electrical background. The financial CLIs write committee-style reports meant to be read in minutes, caveats included. Error responses follow RFC&nbsp;9457 and say what actually conflicts, by name. If a page on this site or in these repositories reads as padding, that is a bug.</p>
+
+      <p>None of these habits is novel, and that is the point: they are the software equivalent of checking a protection relay against a hand calculation before trusting it. The <a href="/case-studies.html">case studies</a> show several of them under pressure, on days when they earned their keep.</p>
+    </main>
+
+    <!-- shell:footer -->
+    <footer class="site-footer">
+      <div class="wrap">
+        <p><a href="https://github.com/NishikawaButterfly">github.com/NishikawaButterfly</a> · <a href="mailto:nishikawa.butterfly@gmail.com">nishikawa.butterfly@gmail.com</a></p>
+        <p>All sample data across these projects is fictional.</p>
+      </div>
+    </footer>
+    <!-- /shell:footer -->
+  </body>
+</html>
