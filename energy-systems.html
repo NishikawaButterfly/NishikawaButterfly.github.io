@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Energy Systems — NishikawaButterfly</title>
+    <meta name="description" content="Solar-plus-storage economics from dispatch to financing: what a battery is worth over a PV-only baseline, what NPV, IRR, and LCOS answer, and where uncertainty enters the calculation.">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/main.js" defer></script>
+  </head>
+  <body>
+    <!-- shell:header -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="wrap bar">
+        <a class="site-name" href="/">NishikawaButterfly</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+        <nav id="site-nav" class="site-nav" aria-label="Site">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects.html">Projects</a></li>
+            <li><a href="/case-studies.html">Case Studies</a></li>
+            <li><a href="/about.html">About</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- /shell:header -->
+
+    <main id="main" class="wrap">
+      <h1>What a battery is actually worth</h1>
+      <p class="lede">Solar-plus-storage is where my energy work concentrates, and the economics of it are widely talked about and rarely worked through. This page follows one question — what does adding a battery to a solar plant actually earn? — from hourly dispatch to the financing spreadsheet, with the two projects that carry the calculations appearing where the story needs them.</p>
+
+      <h2 id="dispatch">Dispatch: deciding when energy moves</h2>
+      <p>A solar plant with a battery faces a decision every hour: sell the energy now, store it for a better hour, or — when the grid connection is full — curtail it. The decision is constrained from every side: the battery's state of charge, its charge and discharge efficiencies (energy is lost both ways), its power limits, and the shared grid connection that exports can never exceed. A rule of thumb can make these decisions; an optimization makes them defensibly. Given hourly PV production and hourly market prices, the schedule that maximizes value is a well-posed mathematical problem, and <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid">the PV-BESS dispatch model</a> solves it as a mixed-integer program with the HiGHS solver. One detail I like: after finding the optimal profit, a second solve minimizes battery throughput without giving any of that profit back, so the schedule never cycles the battery for nothing. The full formulation is in <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/blob/main/docs/methodology.md">the methodology document</a>.</p>
+
+      <h2 id="the-baseline">Value is an increment, not a total</h2>
+      <p>The single most important discipline in storage economics is the baseline. A solar plant with no battery already earns revenue: it sells whatever it produces at whatever the price happens to be. The battery only changes the margins of that picture — it shifts energy from cheap hours to expensive ones and recovers energy that would have been curtailed. So the honest measure of the battery's worth is the hybrid plant's value minus the PV-only baseline, and that increment is the only cash flow the battery's investment case may claim. Value the whole plant against the battery's cost and every battery looks brilliant, because the solar plant is doing most of the earning. The model computes the PV-only baseline explicitly and reports the battery's contribution as the difference, along with curtailment recovered and equivalent full cycles — the wear the increment cost.</p>
+
+      <h2 id="npv-irr-lcos">What NPV, IRR, and LCOS answer</h2>
+      <p>Three standard metrics turn that increment into an investment case, and they answer three different questions. NPV — net present value — asks: summed over the project's life, with each year's cash discounted back to today, is the increment worth more than the battery costs? A positive NPV is the whole argument in one number, but it depends on the discount rate you chose. IRR — internal rate of return — inverts the question: what discount rate would make the NPV exactly zero? It reads as the return the project implies, comparable against a hurdle rate. LCOS — levelized cost of storage — divides the discounted lifetime cost of the battery by the discounted energy it discharges, giving a cost per stored-and-delivered kWh that can be compared across technologies. None of these is a forecast. They are consequences of the scenario you fed in — this price series, this equipment, these assumptions — and the model writes the hashes of its inputs into every result so a number can always be traced back to exactly the scenario that produced it.</p>
+
+      <h2 id="uncertainty">Where uncertainty enters</h2>
+      <p>Every input above is uncertain — prices most of all — and an investment case that hides that is advertising. Two instruments keep it honest. One-at-a-time sensitivities rerun the scenario with a single assumption moved (price level, battery size and power, efficiency, degradation cost) and tabulate how the metrics respond, which shows which assumptions actually carry the answer. Seeded Monte Carlo goes further: draw uncertain inputs from stated distributions, run thousands of cases, and report NPV and IRR as percentiles plus the probability that the NPV comes out negative. The seed is a required argument, so every simulation is reproducible number for number.</p>
+      <p>Real projects also borrow money and pay taxes, which is where <a href="https://github.com/NishikawaButterfly/energy-investment-lab">Energy Investment Lab</a> takes over from the dispatch model's deliberately unlevered, pre-tax scope. It layers annuity debt with debt-service coverage onto the cash flows, then corporate tax with straight-line depreciation, capital grants, and loss carryforward, plus MIRR and levelized cost from an energy profile with degradation. One JSON scenario in; a results file and a committee-style report out, written to be read in minutes: the assumptions, the base case, the sensitivity table, the Monte Carlo percentiles, and the caveats. Every worked example in <a href="https://github.com/NishikawaButterfly/energy-investment-lab/blob/main/docs/methodology.md">its methodology document</a> is hand-calculated and pinned by tests.</p>
+
+      <h2 id="honest-benchmarks">Honest numbers include the failures</h2>
+      <p>The dispatch model's benchmark page is the part I would show a skeptic. A day solves in a twentieth of a second, a month in about half a second, a quarter in under three; the full 8,760-hour year completed once in 191 seconds — and then failed to finish on an identical rerun, because the throughput-refinement phase scales badly past a few thousand intervals. <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/blob/main/docs/benchmarks.md">The published benchmarks</a> report all of it: the aborted run, the hardware, the input hashes, and the script that regenerates the exact year so anyone can repeat the attempt. The practical horizon on modest hardware is about a quarter, and the page says so. There is a longer account of that decision in <a href="/case-studies.html#year-does-not-fit">the case studies</a>.</p>
+
+      <p>The usual closing caveats are structural here, not small print: every price series and scenario in these repositories is fictional, the results are scenario calculations rather than forecasts, and nothing on this page or in these projects is investment advice.</p>
+    </main>
+
+    <!-- shell:footer -->
+    <footer class="site-footer">
+      <div class="wrap">
+        <p><a href="https://github.com/NishikawaButterfly">github.com/NishikawaButterfly</a> · <a href="mailto:nishikawa.butterfly@gmail.com">nishikawa.butterfly@gmail.com</a></p>
+        <p>All sample data across these projects is fictional.</p>
+      </div>
+    </footer>
+    <!-- /shell:footer -->
+  </body>
+</html>
