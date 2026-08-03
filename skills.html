@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Skills — NishikawaButterfly</title>
+    <meta name="description" content="A capability inventory grounded entirely in public repositories: data-center electrical systems, energy economics, operations, and the software engineering used to build tools for all three.">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/main.js" defer></script>
+  </head>
+  <body>
+    <!-- shell:header -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="wrap bar">
+        <a class="site-name" href="/">NishikawaButterfly</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+        <nav id="site-nav" class="site-nav" aria-label="Site">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects.html">Projects</a></li>
+            <li><a href="/case-studies.html">Case Studies</a></li>
+            <li><a href="/about.html">About</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- /shell:header -->
+
+    <main id="main" class="wrap">
+      <h1>Skills</h1>
+      <p class="lede">This is the closest thing to a résumé on this site, and it follows one rule: every claim below is traceable to a public repository you can read, run, and check. There are no employers, no years of experience, and no certifications here — a pseudonymous page could assert those, but you could not verify them, so they would be noise.</p>
+
+      <h2 id="domains">Domains</h2>
+      <ul>
+        <li><strong>Data-center electrical systems.</strong> Redundancy topologies (N, N+1, 2N), UPS autonomy arithmetic, transfer sequencing, capacity allocation across paths, and the failure timelines that connect them — modeled in <a href="https://github.com/NishikawaButterfly/dc-twin">dc-twin</a>, whose model rules, reference topologies, and hand-calculated scenarios are documented in the repository.</li>
+        <li><strong>Energy-project economics.</strong> Battery dispatch against market prices, incremental valuation over a PV-only baseline, NPV, IRR, MIRR, payback, LCOE and LCOS, annuity debt with DSCR, corporate tax with depreciation and loss carryforward, one-at-a-time sensitivities, and seeded Monte Carlo — implemented across <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid">the PV-BESS dispatch model</a> and <a href="https://github.com/NishikawaButterfly/energy-investment-lab">Energy Investment Lab</a>, with the portfolio-risk toolkit in <a href="https://github.com/NishikawaButterfly/quant-risk-engine">the quant risk engine</a>.</li>
+        <li><strong>Critical-facility operations.</strong> Maintenance workflows, MOP/SOP/EOP procedure lifecycles, work permits, commissioning evidence, separation of duties, operational constraints over redundant equipment, and audit trails — encoded and enforced in <a href="https://github.com/NishikawaButterfly/critical-facilities-manager">Critical Facilities Manager</a>.</li>
+        <li><strong>Electrical asset data quality.</strong> Register contracts, per-row validation, and revision diffing for handover between design, commissioning, and operations — the whole subject of <a href="https://github.com/NishikawaButterfly/electrical-asset-validator">Electrical Asset Validator</a>.</li>
+      </ul>
+
+      <h2 id="engineering">Engineering</h2>
+      <ul>
+        <li><strong>Python, typed and tested.</strong> The primary language of every backend here: strict mypy, Ruff, and coverage gates run in CI across the repositories, with test suites up to a few hundred tests per project.</li>
+        <li><strong>Web services.</strong> FastAPI with SQLAlchemy and PostgreSQL (Alembic migrations in dc-twin, token authentication with roles in the facilities manager), versioned APIs, RFC&nbsp;9457 problem-details errors, and OpenAPI documentation.</li>
+        <li><strong>Optimization and numerics.</strong> Mixed-integer linear programming with SciPy's HiGHS interface (the dispatch MILP), NumPy-based portfolio analytics with closed-form cross-checks (the efficient frontier is validated against the normal equations), and exact integer arithmetic where money or energy must reconcile.</li>
+        <li><strong>Frontends, sized to the job.</strong> React with TypeScript where the interface warrants it (the validator), dependency-free vanilla JavaScript where it does not (the dc-twin explorer, the PV-BESS results page, and <a href="https://github.com/NishikawaButterfly/sudoku-pwa">a full offline PWA</a> with a service worker), with Playwright for browser testing.</li>
+        <li><strong>Packaging and operations.</strong> Docker Compose stacks with health checks and hardened containers (non-root, read-only filesystems), SQLite-to-PostgreSQL configurability, and GitHub Actions CI including CodeQL, dependency audit and review, and cross-platform test matrices.</li>
+        <li><strong>SQL and persistence.</strong> Relational schemas for immutable run records, append-only audit tables, and workflow state machines whose transitions are enforced in one place.</li>
+      </ul>
+
+      <h2 id="practices">Practices</h2>
+      <p>The practices are documented with linked evidence on <a href="/software.html">the software page</a> and shown under pressure in <a href="/case-studies.html">the case studies</a>: hand-calculated expectations committed apart from the engines, conventions written down, deterministic byte-identical outputs, tests that prove design claims, published limitations, and fictional data throughout.</p>
+
+      <h2 id="the-resume">The résumé</h2>
+      <p>An anonymous list of skills is worth exactly as much as its evidence, which is why every line above points at code. If you want to evaluate the work, do not take this page's word for anything: the repositories are the résumé.</p>
+    </main>
+
+    <!-- shell:footer -->
+    <footer class="site-footer">
+      <div class="wrap">
+        <p><a href="https://github.com/NishikawaButterfly">github.com/NishikawaButterfly</a> · <a href="mailto:nishikawa.butterfly@gmail.com">nishikawa.butterfly@gmail.com</a></p>
+        <p>All sample data across these projects is fictional.</p>
+      </div>
+    </footer>
+    <!-- /shell:footer -->
+  </body>
+</html>
