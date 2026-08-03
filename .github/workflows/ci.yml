@@ -19,3 +19,5 @@ jobs:
         run: node tools/check_links.js
       - name: HTML well-formedness
         run: node tools/check_html.js
+      - name: Project cards match projects.json
+        run: node tools/check_projects.js
