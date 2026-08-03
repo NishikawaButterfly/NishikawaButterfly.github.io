@@ -152,7 +152,8 @@ a:hover {
 .site-nav ul {
   list-style: none;
   display: flex;
-  gap: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.25rem;
   margin: 0;
   padding: 0;
 }
