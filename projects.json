@@ -1,0 +1,125 @@
+{
+  "$comment": "Single source of truth for the project cards. tools/build_projects.js regenerates projects.html and the home highlights from this file; tools/check_projects.js asserts the committed HTML matches. Versions mirror the tagged GitHub releases.",
+  "projects": [
+    {
+      "slug": "dc-twin",
+      "name": "dc-twin",
+      "status": "Released",
+      "version": "v0.2.0",
+      "description": "A deterministic, capacity-constrained simulator for synthetic data-center electrical architectures.",
+      "result": "The same inputs and model version always reproduce the same SHA-256 result hash, and the reference scenarios match hand calculations committed independently of the engine.",
+      "limitation": "Models lossless active power against capacity constraints only — no voltage, frequency, protection, thermal behavior, or economics.",
+      "tech": ["Python", "FastAPI", "PostgreSQL", "plain JavaScript", "Docker Compose"],
+      "links": {
+        "repo": "https://github.com/NishikawaButterfly/dc-twin",
+        "release": "https://github.com/NishikawaButterfly/dc-twin/releases/tag/v0.2.0",
+        "demo": "https://dc-twin.fly.dev/",
+        "video": "https://github.com/NishikawaButterfly/dc-twin/releases/download/v0.2.0/twin-demo.mp4",
+        "case_study": "/case-studies.html#hand-arithmetic"
+      },
+      "image": "/assets/projects/dc-twin.jpg",
+      "image_alt": "dc-twin web explorer showing the timeline, alarms, and metrics of the composite reference scenario"
+    },
+    {
+      "slug": "electrical-asset-validator",
+      "name": "Electrical Asset Validator",
+      "status": "Released",
+      "version": "v0.1.0",
+      "description": "A self-hosted web app that validates CSV and XLSX electrical asset registers and diffs two revisions by stable asset tag.",
+      "result": "Both file formats go through exactly the same nine-column rule set, and every finding names the row and field it refers to.",
+      "limitation": "No authentication or multi-tenant isolation; processing is synchronous and bounded, and rules check data quality, not electrical-code compliance.",
+      "tech": ["FastAPI", "React + TypeScript", "PostgreSQL", "Docker Compose"],
+      "links": {
+        "repo": "https://github.com/NishikawaButterfly/electrical-asset-validator",
+        "release": "https://github.com/NishikawaButterfly/electrical-asset-validator/releases/tag/v0.1.0",
+        "demo": "https://electrical-asset-validator.fly.dev/",
+        "video": "https://github.com/NishikawaButterfly/electrical-asset-validator/releases/download/v0.1.0/validator-demo.mp4"
+      },
+      "image": "/assets/projects/electrical-asset-validator.png",
+      "image_alt": "Validation results dashboard with quality score, issue metrics, filters, and row-level findings"
+    },
+    {
+      "slug": "critical-facilities-manager",
+      "name": "Critical Facilities Manager",
+      "status": "Released",
+      "version": "v0.1.0",
+      "description": "An operations and commissioning platform for critical facilities behind a token-authenticated, role-guarded REST API.",
+      "result": "Mutual-exclusion constraints stop simultaneous maintenance on redundant equipment: the second order is rejected with a 409 naming the constraint and the conflicting order.",
+      "limitation": "API-token authentication only, with no frontend yet, and roles apply to the whole installation rather than per site.",
+      "tech": ["Python", "FastAPI", "SQLAlchemy", "bearer-token auth with roles"],
+      "links": {
+        "repo": "https://github.com/NishikawaButterfly/critical-facilities-manager",
+        "release": "https://github.com/NishikawaButterfly/critical-facilities-manager/releases/tag/v0.1.0"
+      },
+      "image": null
+    },
+    {
+      "slug": "pv-bess-hybrid",
+      "name": "PV-BESS dispatch model",
+      "status": "Released",
+      "version": "v0.1.0",
+      "description": "A dispatch and investment model for solar-plus-battery plants, solved as a mixed-integer program with HiGHS.",
+      "result": "Solver benchmarks per horizon are published including the full-year run that did not finish, together with the script that reproduces the attempt.",
+      "limitation": "Dispatch plus unlevered, pre-tax investment math only — no electrical design, no price forecasting, and no taxes, debt, or grants.",
+      "tech": ["Python", "SciPy MILP (HiGHS)", "optional FastAPI API", "dependency-free results page"],
+      "links": {
+        "repo": "https://github.com/NishikawaButterfly/pv-bess-hybrid",
+        "release": "https://github.com/NishikawaButterfly/pv-bess-hybrid/releases/tag/v0.1.0",
+        "demo": "https://pv-bess-hybrid.fly.dev/",
+        "video": "https://github.com/NishikawaButterfly/pv-bess-hybrid/releases/download/v0.1.0/pvbess-demo.mp4",
+        "case_study": "/case-studies.html#year-does-not-fit"
+      },
+      "image": "/assets/projects/pv-bess-hybrid.png",
+      "image_alt": "Results page with hand-drawn SVG charts of PV production, prices, battery flows, and state of charge"
+    },
+    {
+      "slug": "energy-investment-lab",
+      "name": "Energy Investment Lab",
+      "status": "Released",
+      "version": "v0.1.0",
+      "description": "A cash-flow and financing model for energy assets, in plain Python with no runtime dependencies.",
+      "result": "The seeded Monte Carlo is reproducible number for number, and every worked example in the docs is hand-calculated and pinned by tests.",
+      "limitation": "Sensitivities are one-at-a-time single-parameter variants, and nothing it produces is investment advice.",
+      "tech": ["plain Python, zero runtime dependencies", "CLI"],
+      "links": {
+        "repo": "https://github.com/NishikawaButterfly/energy-investment-lab",
+        "release": "https://github.com/NishikawaButterfly/energy-investment-lab/releases/tag/v0.1.0"
+      },
+      "image": null
+    },
+    {
+      "slug": "quant-risk-engine",
+      "name": "Quant Risk Engine",
+      "status": "Released",
+      "version": "v0.1.0",
+      "description": "A reproducible portfolio-analytics and market-risk engine for public securities — deliberately not a prediction tool.",
+      "result": "The backtest interface exposes only observations strictly preceding the decision date, and a deliberately cheating policy in the tests prices what peeking would be worth.",
+      "limitation": "Measures what a supplied price history did, under stated conventions — it forecasts nothing and recommends nothing.",
+      "tech": ["Python", "NumPy and SciPy as the only runtime dependencies", "CLI"],
+      "links": {
+        "repo": "https://github.com/NishikawaButterfly/quant-risk-engine",
+        "release": "https://github.com/NishikawaButterfly/quant-risk-engine/releases/tag/v0.1.0",
+        "case_study": "/case-studies.html#look-ahead"
+      },
+      "image": null
+    },
+    {
+      "slug": "sudoku-pwa",
+      "name": "Sudoku Instant",
+      "status": "Released",
+      "version": "v1.1.0",
+      "description": "A sudoku game as an installable progressive web app with six difficulty levels, offline play, and full keyboard support.",
+      "result": "All 24 puzzles are confirmed by a bounded solver to have exactly one solution, and Playwright plays the app through on desktop and mobile viewports.",
+      "limitation": "Difficulty is approximated by clue count rather than rated solving techniques, and progress lives in one browser profile with no sync.",
+      "tech": ["plain JavaScript, no framework", "service worker", "Playwright tests"],
+      "links": {
+        "repo": "https://github.com/NishikawaButterfly/sudoku-pwa",
+        "release": "https://github.com/NishikawaButterfly/sudoku-pwa/releases/tag/v1.1.0",
+        "demo": "https://nishikawabutterfly.github.io/sudoku-pwa/"
+      },
+      "image": "/assets/projects/sudoku-pwa.png",
+      "image_alt": "Sudoku Instant gameplay on a mobile viewport with the grid, timer, and number pad"
+    }
+  ],
+  "home_highlights": ["dc-twin", "electrical-asset-validator", "critical-facilities-manager"]
+}
