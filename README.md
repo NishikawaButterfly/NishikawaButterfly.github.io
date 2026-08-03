@@ -1,0 +1,3 @@
+# nishikawabutterfly.github.io
+
+The personal site behind [nishikawabutterfly.github.io](https://nishikawabutterfly.github.io/): an index of my public projects around data-center and energy engineering. It is plain HTML with one hand-written stylesheet and a few lines of JavaScript for the mobile navigation — no build step, no frameworks, no webfonts, no analytics; every asset is served from this repository. CI keeps the pages honest: `tools/check_shell.js` asserts the header and footer are byte-identical on every page, `tools/check_links.js` verifies that internal links resolve to real files, and `tools/check_html.js` is a light well-formedness check.
