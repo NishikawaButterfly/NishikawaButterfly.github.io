@@ -35,7 +35,7 @@
 
     <main id="main" class="wrap">
       <h1>Projects</h1>
-      <p class="lede">Seven public projects, each with a tagged release, tests, and invented sample data. Ordered roughly by how much there is to look at.</p>
+      <p class="lede">Seven public projects, each with a tagged release, tests, and invented sample data. The data-center and facilities work comes first, then the energy and financial models.</p>
 
       <article class="project">
         <h2 id="dc-twin">dc-twin</h2>
@@ -52,20 +52,6 @@
       </article>
 
       <article class="project">
-        <h2 id="quant-risk-engine">Quant Risk Engine</h2>
-        <p>A reproducible portfolio-analytics and market-risk engine for public securities, and deliberately not a prediction tool. Validated price series, the standard risk metrics with every convention documented, risk contributions that sum to one, an efficient frontier checked against its closed form, walk-forward backtesting where look-ahead is impossible by construction, seeded Monte Carlo, and stress windows and shocks. The CLI writes a committee-style report that is byte-identical across runs, and every worked example in the docs is hand-calculated and pinned by tests.</p>
-        <p class="tech">Python · NumPy and SciPy as the only runtime dependencies · CLI</p>
-        <p class="links"><a href="https://github.com/NishikawaButterfly/quant-risk-engine">Repository</a> · <a href="https://github.com/NishikawaButterfly/quant-risk-engine/releases">Releases</a></p>
-      </article>
-
-      <article class="project">
-        <h2 id="energy-investment-lab">Energy Investment Lab</h2>
-        <p>A cash-flow and financing model for energy assets, in plain Python with no runtime dependencies. It handles escalated revenues and costs, annuity debt with DSCR, corporate tax with depreciation and loss carryforward, MIRR, levelized cost, one-at-a-time sensitivities, and a seeded Monte Carlo whose results are reproducible to the byte. One scenario file in; a results file and a committee-style report out, with every worked example in the docs hand-calculated and pinned by tests.</p>
-        <p class="tech">Plain Python, zero runtime dependencies · CLI</p>
-        <p class="links"><a href="https://github.com/NishikawaButterfly/energy-investment-lab">Repository</a> · <a href="https://github.com/NishikawaButterfly/energy-investment-lab/releases">Releases</a></p>
-      </article>
-
-      <article class="project">
         <h2 id="critical-facilities-manager">Critical Facilities Manager</h2>
         <p>An operations and commissioning platform for critical facilities, developed and tested privately and now public. Locations, assets, and maintenance orders with validated state machines; MOP/SOP/EOP procedures with four-eyes approval; work permits that block completing an order while one is still open; commissioning tests with witnessed evidence; and an append-only audit trail behind every write. Mutual-exclusion constraints stop simultaneous maintenance on redundant equipment: starting the second order is rejected with a 409 that names the constraint and the conflicting order.</p>
         <p class="tech">Python · FastAPI · SQLAlchemy · bearer-token auth with roles · 237 tests</p>
@@ -77,6 +63,20 @@
         <p>A Python model for dispatch of solar-plus-battery plants. It reads hourly PV production and market prices, computes a battery dispatch schedule as a mixed-integer program solved with HiGHS, and works out NPV, IRR, payback, and LCOS for the scenario. Rebuilt from an older prototype after an audit found calculation errors in the original, so it is deliberately small and heavily tested, with solver benchmarks published in the docs.</p>
         <p class="tech">Python · SciPy MILP (HiGHS) · optional FastAPI API · dependency-free results page</p>
         <p class="links"><a href="https://github.com/NishikawaButterfly/pv-bess-hybrid">Repository</a> · <a href="https://github.com/NishikawaButterfly/pv-bess-hybrid/releases/download/v0.1.0/pvbess-demo.mp4">Demo video (v0.1.0)</a> · <a href="https://pv-bess-hybrid.fly.dev/">Live explorer</a></p>
+      </article>
+
+      <article class="project">
+        <h2 id="energy-investment-lab">Energy Investment Lab</h2>
+        <p>A cash-flow and financing model for energy assets, in plain Python with no runtime dependencies. It handles escalated revenues and costs, annuity debt with DSCR, corporate tax with depreciation and loss carryforward, MIRR, levelized cost, one-at-a-time sensitivities, and a seeded Monte Carlo whose results are reproducible to the byte. One scenario file in; a results file and a committee-style report out, with every worked example in the docs hand-calculated and pinned by tests.</p>
+        <p class="tech">Plain Python, zero runtime dependencies · CLI</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/energy-investment-lab">Repository</a> · <a href="https://github.com/NishikawaButterfly/energy-investment-lab/releases">Releases</a></p>
+      </article>
+
+      <article class="project">
+        <h2 id="quant-risk-engine">Quant Risk Engine</h2>
+        <p>A reproducible portfolio-analytics and market-risk engine for public securities, and deliberately not a prediction tool. Validated price series, the standard risk metrics with every convention documented, risk contributions that sum to one, an efficient frontier checked against its closed form, walk-forward backtesting where look-ahead is impossible by construction, seeded Monte Carlo, and stress windows and shocks. The CLI writes a committee-style report that is byte-identical across runs, and every worked example in the docs is hand-calculated and pinned by tests.</p>
+        <p class="tech">Python · NumPy and SciPy as the only runtime dependencies · CLI</p>
+        <p class="links"><a href="https://github.com/NishikawaButterfly/quant-risk-engine">Repository</a> · <a href="https://github.com/NishikawaButterfly/quant-risk-engine/releases">Releases</a></p>
       </article>
 
       <article class="project">
