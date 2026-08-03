@@ -68,26 +68,29 @@
       <section aria-labelledby="highlights">
         <h2 id="highlights">Three places to start</h2>
 
+        <!-- highlights:start -->
         <article class="card">
           <h3>dc-twin</h3>
-          <p>A deterministic capacity simulator for data-center electrical architectures. Describe a topology and a scenario of failures and maintenance windows; it returns a timeline of which loads stayed served, when each UPS ran down, and what caused every alarm.</p>
-          <p class="hook">The interesting bit: the reference scenario's numbers are checked against a hand calculation, and the expected values are committed separately from the engine, so the tests notice if the code ever drifts from the math.</p>
-          <p class="links"><a href="https://dc-twin.fly.dev/">Live explorer</a> · <a href="https://github.com/NishikawaButterfly/dc-twin">Repository</a></p>
+          <p class="card-meta">Released · v0.2.0</p>
+          <p>A deterministic, capacity-constrained simulator for synthetic data-center electrical architectures.</p>
+          <p class="hook">The interesting bit: the same inputs and model version always reproduce the same SHA-256 result hash, and the reference scenarios match hand calculations committed independently of the engine.</p>
+          <p class="links"><a href="https://dc-twin.fly.dev/">Live demo</a> · <a href="https://github.com/NishikawaButterfly/dc-twin">Repository</a></p>
         </article>
-
         <article class="card">
           <h3>Electrical Asset Validator</h3>
-          <p>A web app that checks CSV and XLSX electrical asset registers before they get handed between teams, and diffs two revisions of the same register by asset tag. Every finding names the row and field it refers to, and results export to PDF or XLSX.</p>
-          <p class="hook">The interesting bit: both file formats go through exactly the same rules, so the same register produces the same findings either way — and the diff reports a renamed tag as a removal plus an addition instead of guessing.</p>
+          <p class="card-meta">Released · v0.1.0</p>
+          <p>A self-hosted web app that validates CSV and XLSX electrical asset registers and diffs two revisions by stable asset tag.</p>
+          <p class="hook">The interesting bit: both file formats go through exactly the same nine-column rule set, and every finding names the row and field it refers to.</p>
           <p class="links"><a href="https://electrical-asset-validator.fly.dev/">Live demo</a> · <a href="https://github.com/NishikawaButterfly/electrical-asset-validator">Repository</a></p>
         </article>
-
         <article class="card">
           <h3>Critical Facilities Manager</h3>
-          <p>An operations and commissioning platform for critical facilities: maintenance orders with validated state machines, MOP/SOP/EOP procedures with four-eyes approval, work permits, commissioning evidence, and an append-only audit trail behind every write.</p>
-          <p class="hook">The interesting bit: mutual-exclusion constraints stop simultaneous maintenance on redundant equipment — starting the second order is rejected with a 409 that names the constraint and the conflicting order.</p>
+          <p class="card-meta">Released · v0.1.0</p>
+          <p>An operations and commissioning platform for critical facilities behind a token-authenticated, role-guarded REST API.</p>
+          <p class="hook">The interesting bit: mutual-exclusion constraints stop simultaneous maintenance on redundant equipment — the second order is rejected with a 409 naming the constraint and the conflicting order.</p>
           <p class="links"><a href="https://github.com/NishikawaButterfly/critical-facilities-manager">Repository</a></p>
         </article>
+        <!-- highlights:end -->
       </section>
 
       <p><a href="/projects.html">All seven projects</a></p>
