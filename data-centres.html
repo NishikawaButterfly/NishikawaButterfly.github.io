@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Data Centers — NishikawaButterfly</title>
+    <meta name="description" content="What the electrical side of a data center involves — paths, redundancy, transfer, UPS autonomy, commissioning, and operations — explained for technical readers, with the tools built for each part of the story.">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/main.js" defer></script>
+  </head>
+  <body>
+    <!-- shell:header -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="wrap bar">
+        <a class="site-name" href="/">NishikawaButterfly</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+        <nav id="site-nav" class="site-nav" aria-label="Site">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects.html">Projects</a></li>
+            <li><a href="/case-studies.html">Case Studies</a></li>
+            <li><a href="/about.html">About</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- /shell:header -->
+
+    <main id="main" class="wrap">
+      <h1>The electrical side of a data center</h1>
+      <p class="lede">This page explains what the electrical engineering of a data center actually involves, for readers who are technical but not electrical. Three of my projects live in this territory, and they appear below where they belong in the story — as evidence of the problems, not as advertisements.</p>
+
+      <h2 id="the-path">The path, not the servers</h2>
+      <p>A data center is a building full of computers that must never lose power. The computers are not the interesting part. The interesting part is the chain of equipment between the public grid and the plug: a utility intake, transformers stepping the voltage down, switchgear that lets sections be isolated, a UPS whose batteries bridge gaps, and power distribution units splitting one large feed into circuits for the racks. Alongside the chain sits a generator, idle for almost all of its life, waiting for the day the grid is not there. Engineers call one complete chain a path, and every piece of it carries a rating — the capacity it can handle. A surprising amount of the discipline is therefore bookkeeping: in every state the building can get into, does some path still connect every load to a source with enough capacity at every link?</p>
+
+      <h2 id="redundancy">Redundancy, and its quiet weakness</h2>
+      <p>Write N for the amount of equipment the load needs. N+1 means one spare of the piece most likely to fail. 2N means building all of it twice: two complete, independent paths, either one able to carry everything, with the critical loads plugged into both at once. The arithmetic sounds like the end of the story, but redundancy only protects you while both copies exist. The moment one path is down for planned maintenance — and maintenance is not optional — a 2N facility is running on a single path, temporarily as fragile as a design with no redundancy at all. The genuinely bad days in this industry tend to have exactly that shape: an unplanned failure that lands inside the window when the safety margin was deliberately switched off.</p>
+
+      <h2 id="transfer-and-the-battery-clock">Transfer, and the battery clock</h2>
+      <p>When the grid disappears, several clocks start at once. The UPS picks up the load instantly, and its battery buys minutes, not hours — dividing usable energy by the load gives the autonomy window, and that division is one of the most consequential pieces of arithmetic in the building. The generator needs seconds to start and a transfer switch to route it in, if it starts. And somewhere a person or an automation is working to restore a path. The outcome of the whole event is a race between the clock counting the battery down and the clock counting up to restoration. Everything else is detail.</p>
+      <p>Making that race explicit and checkable is what <a href="https://github.com/NishikawaButterfly/dc-twin">dc-twin</a> is for. It is a deterministic simulator: describe a synthetic topology and a scenario of failures, maintenance windows, and transfers, and it returns a timeline of which loads stayed served, when each UPS ran down, and what caused every alarm. In its 2N reference scenario the battery loses the race by exactly 32 seconds, and every number in the results table follows from two timestamps — the inputs are deliberately chosen so a reviewer can redo the entire calculation on paper. If the vocabulary on this page is new, the project's <a href="https://github.com/NishikawaButterfly/dc-twin/blob/main/docs/EXPLAINER.md">plain-language explainer</a> tells the same ten-minute story from the beginning, and the <a href="https://dc-twin.fly.dev/">live explorer</a> runs it in the browser.</p>
+
+      <h2 id="commissioning">Commissioning: breaking it on purpose</h2>
+      <p>Between construction and operation sits a phase whose entire purpose is to prove the failure story before the building matters: commissioning. You pull the utility on purpose, watch the transfer happen, let the batteries carry the load, and record what actually occurred, with a witness who is not the person running the test. A facility that has never demonstrated its failure modes has specifications, not evidence.</p>
+      <p>Commissioning is also where a mundane artifact becomes critical: the asset register. Every breaker, panel, UPS module, and PDU exists as a row in a spreadsheet that passes from the design team to the commissioning team to operations, and defects in it — duplicate tags, missing panel references, ratings that cannot be right — quietly poison every analysis built on top. <a href="https://github.com/NishikawaButterfly/electrical-asset-validator">Electrical Asset Validator</a> is a data-quality gate for that handover: it checks CSV and XLSX registers against a <a href="https://github.com/NishikawaButterfly/electrical-asset-validator/blob/main/docs/rules.md">documented nine-column contract</a>, ties every finding to the row and field it refers to, and diffs two revisions by stable asset tag so the changes between handovers are visible instead of easy to miss. It checks data quality, not electrical correctness — that boundary is stated in the project itself.</p>
+
+      <h2 id="operations">Operations: the discipline after day one</h2>
+      <p>Once the facility is live, the electrical work becomes procedural. Maintenance has to happen, and every maintenance window spends redundancy, so the work runs under written procedures and permits: a method statement approved by someone other than its author, a permit issued by someone other than the requester, and a rule that matters more than any of those — never take both copies of a redundant pair out of service at once. None of this is bureaucracy for its own sake; it is the operational answer to the weakness described above.</p>
+      <p><a href="https://github.com/NishikawaButterfly/critical-facilities-manager">Critical Facilities Manager</a> encodes that discipline as software: assets and maintenance orders with validated state machines, MOP/SOP/EOP procedures with four-eyes approval, work permits that block completing an order while one is still open, commissioning tests whose recorded evidence names an independent witness, and mutual-exclusion constraints over redundant equipment — starting a second simultaneous order is rejected with an error that names the constraint and the conflicting order. An append-only audit trail sits behind every write, because in operations, who did what and when is not a nice-to-have.</p>
+
+      <h2 id="why-software">Why this became software</h2>
+      <p>The three tools share one observation: the failure timeline, the asset register, and the operating discipline are all places where the reasoning is exact but the everyday tooling is a spreadsheet and good intentions. Software is better than intentions at arithmetic, at diffs, and at refusing to break a rule. Everything public here is built on fictional data — synthetic topologies, invented registers, a made-up campus — because the reasoning can be public without any real site being in it.</p>
+    </main>
+
+    <!-- shell:footer -->
+    <footer class="site-footer">
+      <div class="wrap">
+        <p><a href="https://github.com/NishikawaButterfly">github.com/NishikawaButterfly</a> · <a href="mailto:nishikawa.butterfly@gmail.com">nishikawa.butterfly@gmail.com</a></p>
+        <p>All sample data across these projects is fictional.</p>
+      </div>
+    </footer>
+    <!-- /shell:footer -->
+  </body>
+</html>
