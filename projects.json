@@ -30,10 +30,10 @@
       "slug": "electrical-asset-validator",
       "name": "Electrical Asset Validator",
       "status": "Released",
-      "version": "v0.1.0",
+      "version": "v0.2.0",
       "description": "A self-hosted web app that validates CSV and XLSX electrical asset registers and diffs two revisions by stable asset tag.",
       "result": "Both file formats go through exactly the same nine-column rule set, and every finding names the row and field it refers to.",
-      "limitation": "No authentication or multi-tenant isolation; processing is synchronous and bounded, and rules check data quality, not electrical-code compliance.",
+      "limitation": "Optional shared-secret tokens rather than user accounts; processing is synchronous and bounded, and rules check data quality, not electrical-code compliance.",
       "tech": [
         "FastAPI",
         "React + TypeScript",
@@ -42,7 +42,7 @@
       ],
       "links": {
         "repo": "https://github.com/NishikawaButterfly/electrical-asset-validator",
-        "release": "https://github.com/NishikawaButterfly/electrical-asset-validator/releases/tag/v0.1.0",
+        "release": "https://github.com/NishikawaButterfly/electrical-asset-validator/releases/tag/v0.2.0",
         "demo": "https://electrical-asset-validator.fly.dev/",
         "video": "https://github.com/NishikawaButterfly/electrical-asset-validator/releases/download/v0.1.0/validator-demo.mp4"
       },
