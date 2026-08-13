@@ -79,12 +79,12 @@
           </div>
           <div class="card-body">
             <h2>Critical Facilities Manager</h2>
-            <p class="card-meta">Released · v0.1.0</p>
-            <p>An operations and commissioning platform for critical facilities behind a token-authenticated, role-guarded REST API.</p>
+            <p class="card-meta">Released · v0.2.0</p>
+            <p>An operations and commissioning platform for critical facilities: a role-guarded REST API with a plain web interface over it.</p>
             <p class="card-result"><strong>Result:</strong> Mutual-exclusion constraints stop simultaneous maintenance on redundant equipment — the second order is rejected with a 409 naming the constraint and the conflicting order.</p>
-            <p class="card-limit">Limitation: API-token authentication only, with no frontend yet, and roles apply to the whole installation rather than per site.</p>
-            <p class="tech">Python · FastAPI · SQLAlchemy · bearer-token auth with roles</p>
-            <p class="links"><a href="https://github.com/NishikawaButterfly/critical-facilities-manager">Repository</a> · <a href="https://github.com/NishikawaButterfly/critical-facilities-manager/releases/tag/v0.1.0">Release v0.1.0</a></p>
+            <p class="card-limit">Limitation: Tokens are shared secrets rather than user accounts, and reads are installation-wide even though write authority is scoped per site.</p>
+            <p class="tech">Python · FastAPI · SQLAlchemy with Alembic · PostgreSQL or SQLite · plain JavaScript</p>
+            <p class="links"><a href="https://github.com/NishikawaButterfly/critical-facilities-manager">Repository</a> · <a href="https://github.com/NishikawaButterfly/critical-facilities-manager/releases/tag/v0.2.0">Release v0.2.0</a></p>
           </div>
         </article>
         <article class="project-card" id="pv-bess-hybrid">
